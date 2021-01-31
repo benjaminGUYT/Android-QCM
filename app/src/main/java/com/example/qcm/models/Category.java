@@ -16,7 +16,7 @@ public class Category {
     }
 
     public String getName() {
-        return name;
+        return name.replace("Entertainment: ", "").replace("Science: ", "");
     }
 
     // Text show in Spinner

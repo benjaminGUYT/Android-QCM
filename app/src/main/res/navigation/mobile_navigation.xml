@@ -12,9 +12,15 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.qcm.ui.gallery.GalleryFragment"
-        android:label="@string/menu_qcm"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_options"
+        android:name="com.example.qcm.ui.options.OptionsFragment"
+        android:label="@string/fragment_title_options"
+        tools:layout="@layout/fragment_options" />
+
+    <fragment
+        android:id="@+id/nav_qcm"
+        android:name="com.example.qcm.ui.qcm.QcmFragment"
+        android:label="@string/fragment_title_qcm"
+        tools:layout="@layout/fragment_qcm" />
 
 </navigation>

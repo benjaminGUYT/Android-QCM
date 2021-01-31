@@ -20,10 +20,9 @@ public interface OpenTriviaDB {
     Call<CategoryQuestionCount> getNumberOfQuestionsByCategory(@Query("category") int category);
 
     @GET("api.php")
-    Call<ListQuestions> getListQuestionsByAmountAndCategoryAndDifficultyAndType(
+    Call<ListQuestions> getListQuestionsByAmountAndCategoryAndDifficulty(
             @Query("amount") int amount,
             @Query("category") String category,
-            @Query("difficulty") String difficulty,
-            @Query("type") String type);
+            @Query("difficulty") String difficulty);
 
 }
