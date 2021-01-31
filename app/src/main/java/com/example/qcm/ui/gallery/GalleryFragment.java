@@ -1,5 +1,6 @@
 package com.example.qcm.ui.gallery;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -33,16 +35,15 @@ public class GalleryFragment extends Fragment {
     private GalleryViewModel galleryViewModel;
 
     private TextView textViewResult;
-    private Spinner categoriesSpinner;
-    private Spinner difficultiesSpinner;
-    private Spinner typeSpinner;
+    private NumberPicker questionCount;
     private List<String> types = new ArrayList<String>(Arrays.asList(new String[]{"Any", "Multiple choice", "True / False"}));
     private List<String> difficulties = new ArrayList<String>(Arrays.asList(new String[]{"Any", "Easy", "Medium", "Hard"}));
     private List<Category> categoryList = new ArrayList<Category>();
 
     private Category selectedCategory;
-    private String selectedDifficulty;
+    private String selectedDifficulty = "any";
     private String selectedType;
+    private int selectedNumber;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -55,52 +56,51 @@ public class GalleryFragment extends Fragment {
 
         textViewResult = root.findViewById(R.id.text_view_result);
 
-        categoriesSpinner = root.findViewById(R.id.categories_spinner);
-        Category catmp = new Category(0, "Any");
-        selectedCategory = catmp;
-        categoryList.add(catmp);
+        final Spinner categoriesSpinner = root.findViewById(R.id.categories_spinner);
         ArrayAdapter<Category> categoriesSpinnerAdapter = new ArrayAdapter<Category>(this.getContext(),
                 android.R.layout.simple_spinner_item,
                 categoryList);
         categoriesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.categoriesSpinner.setAdapter(categoriesSpinnerAdapter);
-        this.categoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        categoriesSpinner.setAdapter(categoriesSpinnerAdapter);
+        categoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Adapter adapter = parent.getAdapter();
                 Category category = (Category) adapter.getItem(position);
                 selectedCategory = category;
+                galleryViewModel.getNumberOfQuestionsByCategory(category, selectedDifficulty);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
-        difficultiesSpinner = root.findViewById(R.id.difficulty_spinner);
+        final Spinner difficultiesSpinner = root.findViewById(R.id.difficulty_spinner);
         ArrayAdapter<String> difficultiesSpinnerAdapter = new ArrayAdapter<String>(this.getContext(),
                 android.R.layout.simple_spinner_item,
                 difficulties);
         difficultiesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.difficultiesSpinner.setAdapter(difficultiesSpinnerAdapter);
-        this.difficultiesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        difficultiesSpinner.setAdapter(difficultiesSpinnerAdapter);
+        difficultiesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Adapter adapter = parent.getAdapter();
                 String difficulty = (String) adapter.getItem(position);
                 selectedDifficulty = difficulty.toLowerCase();
+                galleryViewModel.getNumberOfQuestionsByCategory(selectedCategory, selectedDifficulty);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
-        typeSpinner = root.findViewById(R.id.type_spinner);
+        final Spinner typeSpinner = root.findViewById(R.id.type_spinner);
         ArrayAdapter<String> typesSpinnerAdapter = new ArrayAdapter<String>(this.getContext(),
                 android.R.layout.simple_spinner_item,
                 types);
         typesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.typeSpinner.setAdapter(typesSpinnerAdapter);
-        this.typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        typeSpinner.setAdapter(typesSpinnerAdapter);
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Adapter adapter = parent.getAdapter();
@@ -112,49 +112,48 @@ public class GalleryFragment extends Fragment {
             }
         });
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://opentdb.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        OpenTriviaDB openTriviaDB = retrofit.create(OpenTriviaDB.class);
-
-        Call<Result> call = openTriviaDB.getCategories();
-
-        call.enqueue(new Callback<Result>() {
+        questionCount = root.findViewById(R.id.question_count);
+        questionCount.setMinValue(1);
+        questionCount.setMaxValue(50);
+        questionCount.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                if(!response.isSuccessful()) {
-                    textViewResult.setText(response.code());
-                    return;
-                }
-
-                Result result = response.body();
-
-
-
-                StringBuilder sb = new StringBuilder("");
-                for(Category cat : result.getCategories()) {
-                    sb.append("Nom : " + cat.getName() + " ID : " + cat.getId() + "\n");
-                    categoryList.add(cat);
-                }
-                categoriesSpinnerAdapter.notifyDataSetChanged();
-                textViewResult.append(sb.toString());
-
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                textViewResult.setText("Failure : " + t.getMessage());
+            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                selectedNumber = numberPicker.getValue();
             }
         });
 
-                galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        
+
+        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
         });
+
+        galleryViewModel.getInitialSelectedCategories().observe(getViewLifecycleOwner(), new Observer<Category>() {
+            @Override
+            public void onChanged(Category category) {
+                selectedCategory = category;
+            }
+        });
+
+        galleryViewModel.getListCategories().observe(getViewLifecycleOwner(), new Observer<List<Category>>() {
+            @Override
+            public void onChanged(List<Category> categories) {
+                categoriesSpinnerAdapter.addAll(categories);
+                categoriesSpinnerAdapter.notifyDataSetChanged();
+            }
+        });
+
+        galleryViewModel.getNumberOfQuestions().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                questionCount.setMaxValue(integer);
+            }
+        });
+
+
         return root;
     }
 
