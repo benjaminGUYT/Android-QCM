@@ -10,4 +10,12 @@ public class Question {
 
     private List<String> incorrect_answers;
 
+    @Override
+    public String toString() {
+        return "Question{" +
+                "question='" + question + '\'' +
+                ", correct_answer='" + correct_answer + '\'' +
+                ", incorrect_answers=" + incorrect_answers +
+                '}';
+    }
 }

@@ -7,9 +7,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.qcm.R;
 import com.example.qcm.models.ListQuestions;
+import com.example.qcm.models.Question;
 
 import java.util.List;
 
@@ -19,15 +21,6 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class QcmFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public void setListQuestions(ListQuestions listQuestions) {
         this.listQuestions = listQuestions;
@@ -39,15 +32,7 @@ public class QcmFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment QcmFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static QcmFragment newInstance(ListQuestions listQuestions) {
         QcmFragment fragment = new QcmFragment();
         fragment.setListQuestions(listQuestions);
@@ -63,6 +48,14 @@ public class QcmFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_qcm, container, false);
+        View root = inflater.inflate(R.layout.fragment_qcm, container, false);
+
+        TextView textView = root.findViewById(R.id.TEXT_STATUS_ID);
+        StringBuilder sb = new StringBuilder("");
+        for(Question q : listQuestions.getResults())
+            sb.append(q.toString());
+        textView.setText(sb.toString() + '\n');
+
+        return root;
     }
 }

@@ -143,12 +143,18 @@ public class OptionsViewModel extends ViewModel {
 
 
     public void getQuestionsByCategoryAndDifficulty(int amount, Category selectedCategory, String selectedDifficulty) {
-        if(selectedCategory.getId() == 0) {
-            numberOfQuestions.setValue(50);
-            return;
-        }
 
-        Call<ListQuestions> call = openTriviaDB.getListQuestionsByAmountAndCategoryAndDifficulty(amount, String.valueOf(selectedCategory.getId()), selectedDifficulty);
+        String cat = "";
+        String diff = "";
+
+        if(selectedCategory.getId() != 0) cat = String.valueOf(selectedCategory.getId());
+        if(!selectedDifficulty.equals("any")) diff = selectedDifficulty;
+
+
+        Call<ListQuestions> call = openTriviaDB.getListQuestionsByAmountAndCategoryAndDifficulty(amount,cat, diff);
+
+        System.out.println("CALL = " + call.request());
+
         call.enqueue(new Callback<ListQuestions>() {
             @Override
             public void onResponse(Call<ListQuestions> call, Response<ListQuestions> response) {

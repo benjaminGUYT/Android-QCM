@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.qcm.R;
 import com.example.qcm.models.Category;
 import com.example.qcm.models.ListQuestions;
+import com.example.qcm.models.Question;
 import com.example.qcm.ui.qcm.QcmFragment;
 
 import java.util.ArrayList;
@@ -47,7 +48,6 @@ public class OptionsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
 
         galleryViewModel = new ViewModelProvider(this).get(OptionsViewModel.class);
 
@@ -160,12 +160,13 @@ public class OptionsFragment extends Fragment {
             selectedListQuestions = listQuestions;
             if(listQuestions.getResults() == null)
                 return;
+            System.out.println("SIZE = " + listQuestions.getResults().size());
+            for(Question q : listQuestions.getResults())
+                System.out.println(q.toString() + '\n');
             FragmentTransaction t = this.getParentFragmentManager().beginTransaction();
-            Fragment mFrag = QcmFragment.newInstance(selectedListQuestions);
-            t.replace(R.id.nav_host_fragment, mFrag);
+            t.replace(R.id.nav_host_fragment, QcmFragment.newInstance(selectedListQuestions));
             t.commit();
         });
-
 
         return root;
     }
