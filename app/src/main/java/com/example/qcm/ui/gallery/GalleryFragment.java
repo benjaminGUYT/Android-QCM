@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.qcm.R;
 import com.example.qcm.models.Category;
+import com.example.qcm.models.ListQuestions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,9 +39,12 @@ public class GalleryFragment extends Fragment {
     private String selectedDifficulty = "any";
     private String selectedType;
     private int selectedNumber;
+    private ListQuestions selectedListQuestions;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        selectedType = "any";
 
         galleryViewModel = new ViewModelProvider(this).get(GalleryViewModel.class);
 
@@ -62,7 +66,10 @@ public class GalleryFragment extends Fragment {
                 Adapter adapter = parent.getAdapter();
                 Category category = (Category) adapter.getItem(position);
                 selectedCategory = category;
-                galleryViewModel.getNumberOfQuestionsByCategory(category, selectedDifficulty);
+                if(selectedType.equals("any"))
+                    galleryViewModel.getNumberOfQuestionsByCategoryAndDifficulty(selectedCategory, selectedDifficulty);
+                else
+                    galleryViewModel.getNumberOfQuestionsByCategoryAndDifficultyAndType(50, selectedCategory, selectedDifficulty, selectedType);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -81,7 +88,10 @@ public class GalleryFragment extends Fragment {
                 Adapter adapter = parent.getAdapter();
                 String difficulty = (String) adapter.getItem(position);
                 selectedDifficulty = difficulty.toLowerCase();
-                galleryViewModel.getNumberOfQuestionsByCategory(selectedCategory, selectedDifficulty);
+                if(selectedType.equals("any"))
+                    galleryViewModel.getNumberOfQuestionsByCategoryAndDifficulty(selectedCategory, selectedDifficulty);
+                else
+                    galleryViewModel.getNumberOfQuestionsByCategoryAndDifficultyAndType(50, selectedCategory, selectedDifficulty, selectedType);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -99,7 +109,13 @@ public class GalleryFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Adapter adapter = parent.getAdapter();
                 String type = (String) adapter.getItem(position);
-                selectedType = type.toLowerCase();
+                if(type.equals("Multiple choice")) selectedType = "multiple";
+                else if(type.equals("True / False")) selectedType = "boolean";
+                else selectedType = "any";
+                if(selectedType.equals("any"))
+                    galleryViewModel.getNumberOfQuestionsByCategoryAndDifficulty(selectedCategory, selectedDifficulty);
+                else
+                    galleryViewModel.getNumberOfQuestionsByCategoryAndDifficultyAndType(50 ,selectedCategory, selectedDifficulty, selectedType);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -144,6 +160,14 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onChanged(Integer integer) {
                 questionCount.setMaxValue(integer);
+            }
+        });
+
+        galleryViewModel.getListQuestions().observe(getViewLifecycleOwner(), new Observer<ListQuestions>() {
+            @Override
+            public void onChanged(ListQuestions listQuestions) {
+                selectedListQuestions = listQuestions;
+                // On passe la liste au prochain fragment, et on l'ouvre
             }
         });
 

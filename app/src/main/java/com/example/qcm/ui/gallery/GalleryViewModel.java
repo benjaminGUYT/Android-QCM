@@ -1,12 +1,16 @@
 package com.example.qcm.ui.gallery;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.qcm.models.Category;
 import com.example.qcm.models.CategoryQuestionCount;
 import com.example.qcm.models.ListCategories;
+import com.example.qcm.models.ListQuestions;
+import com.example.qcm.models.Question;
 import com.example.qcm.repositories.OpenTriviaDB;
 
 import java.util.ArrayList;
@@ -24,8 +28,10 @@ public class GalleryViewModel extends ViewModel {
     private MutableLiveData<List<Category>> listCategories;
     private MutableLiveData<Category> initialSelectedCategory;
     private MutableLiveData<Integer> numberOfQuestions;
+    private MutableLiveData<ListQuestions> listQuestions;
 
     private Retrofit retrofit;
+    OpenTriviaDB openTriviaDB;
 
 
 
@@ -34,6 +40,9 @@ public class GalleryViewModel extends ViewModel {
 
         mText = new MutableLiveData<>();
         mText.setValue("Veuillez entrer ci-dessous les options du QCM");
+
+        listQuestions = new MutableLiveData<>();
+        listQuestions.setValue(new ListQuestions());
 
         listCategories = new MutableLiveData<>();
         List<Category> list = new ArrayList<>();
@@ -48,7 +57,7 @@ public class GalleryViewModel extends ViewModel {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        OpenTriviaDB openTriviaDB = retrofit.create(OpenTriviaDB.class);
+        openTriviaDB = retrofit.create(OpenTriviaDB.class);
 
         Call<ListCategories> call = openTriviaDB.getCategories();
 
@@ -83,7 +92,9 @@ public class GalleryViewModel extends ViewModel {
         return numberOfQuestions;
     }
 
-    public void getNumberOfQuestionsByCategory(Category category, String difficulty) {
+    public LiveData<ListQuestions> getListQuestions() { return listQuestions; }
+
+    public void getNumberOfQuestionsByCategoryAndDifficulty(Category category, String difficulty) {
 
         System.out.println(category.getName() + " " + difficulty);
 
@@ -91,7 +102,7 @@ public class GalleryViewModel extends ViewModel {
             numberOfQuestions.setValue(50);
             return;
         }
-        OpenTriviaDB openTriviaDB = retrofit.create(OpenTriviaDB.class);
+
         Call<CategoryQuestionCount> call = openTriviaDB.getNumberOfQuestionsByCategory(category.getId());
         call.enqueue(new Callback<CategoryQuestionCount>() {
             @Override
@@ -121,4 +132,57 @@ public class GalleryViewModel extends ViewModel {
             }
         });
     }
+
+    public void getNumberOfQuestionsByCategoryAndDifficultyAndType(int amount, Category selectedCategory, String selectedDifficulty, String selectedType) {
+        if(selectedCategory.getId() == 0) {
+            numberOfQuestions.setValue(50);
+            return;
+        }
+
+        System.out.println("Amount : " + amount + '\n' + "category : " + String.valueOf(selectedCategory.getId()) + '\n'
+        + "difficulty : " + selectedDifficulty + '\n' + "type : " + selectedType);
+
+        Call<ListQuestions> call = null;
+
+        if(selectedCategory.getId() == 0 && selectedDifficulty == "any")
+            call = openTriviaDB.getListQuestionsByAmountAndCategoryAndDifficultyAndType(amount, "", "", selectedType);
+        else if(selectedCategory.getId() == 0)
+            call = openTriviaDB.getListQuestionsByAmountAndCategoryAndDifficultyAndType(amount, "", selectedDifficulty, selectedType);
+        else if(selectedDifficulty.equals("any"))
+            call = openTriviaDB.getListQuestionsByAmountAndCategoryAndDifficultyAndType(amount, String.valueOf(selectedCategory.getId()), "", selectedType);
+        else
+            call = openTriviaDB.getListQuestionsByAmountAndCategoryAndDifficultyAndType(amount, String.valueOf(selectedCategory.getId()), selectedDifficulty, selectedType);
+
+        System.out.println(call.request().url());
+
+        call.enqueue(new Callback<ListQuestions>() {
+            @Override
+            public void onResponse(Call<ListQuestions> call, Response<ListQuestions> response) {
+                numberOfQuestions.setValue(response.body().getResults().size());
+            }
+            @Override
+            public void onFailure(Call<ListQuestions> call, Throwable t) {
+            }
+        });
+    }
+
+    public void getQuestionsByCategoryAndDifficultyAndType(int amount, Category selectedCategory, String selectedDifficulty, String selectedType) {
+        if(selectedCategory.getId() == 0) {
+            numberOfQuestions.setValue(50);
+            return;
+        }
+
+        Call<ListQuestions> call = openTriviaDB.getListQuestionsByAmountAndCategoryAndDifficultyAndType(amount, String.valueOf(selectedCategory.getId()), selectedDifficulty, selectedType);
+        call.enqueue(new Callback<ListQuestions>() {
+            @Override
+            public void onResponse(Call<ListQuestions> call, Response<ListQuestions> response) {
+                listQuestions.setValue(response.body());
+            }
+            @Override
+            public void onFailure(Call<ListQuestions> call, Throwable t) {
+            }
+        });
+    }
+
+
 }
