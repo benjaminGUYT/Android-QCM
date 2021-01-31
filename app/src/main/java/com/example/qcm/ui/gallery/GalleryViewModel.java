@@ -4,6 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.qcm.models.Category;
+import com.example.qcm.models.CategoryQuestionCount;
+import com.example.qcm.models.ListCategories;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,17 +49,17 @@ public class GalleryViewModel extends ViewModel {
 
         OpenTriviaDB openTriviaDB = retrofit.create(OpenTriviaDB.class);
 
-        Call<Result> call = openTriviaDB.getCategories();
+        Call<ListCategories> call = openTriviaDB.getCategories();
 
-        call.enqueue(new Callback<Result>() {
+        call.enqueue(new Callback<ListCategories>() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
+            public void onResponse(Call<ListCategories> call, Response<ListCategories> response) {
                 for(Category cat : response.body().getCategories())
                     list.add(cat);
                 listCategories.setValue(list);
             }
             @Override
-            public void onFailure(Call<Result> call, Throwable t) {
+            public void onFailure(Call<ListCategories> call, Throwable t) {
             }
         });
 
@@ -87,10 +91,10 @@ public class GalleryViewModel extends ViewModel {
             return;
         }
         OpenTriviaDB openTriviaDB = retrofit.create(OpenTriviaDB.class);
-        Call<QuestionCount> call = openTriviaDB.getNumberOfQuestionsByCategory(category.getId());
-        call.enqueue(new Callback<QuestionCount>() {
+        Call<CategoryQuestionCount> call = openTriviaDB.getNumberOfQuestionsByCategory(category.getId());
+        call.enqueue(new Callback<CategoryQuestionCount>() {
             @Override
-            public void onResponse(Call<QuestionCount> call, Response<QuestionCount> response) {
+            public void onResponse(Call<CategoryQuestionCount> call, Response<CategoryQuestionCount> response) {
                 int ret = 50;
 
                 switch(difficulty) {
@@ -112,7 +116,7 @@ public class GalleryViewModel extends ViewModel {
                 else numberOfQuestions.setValue(50);
             }
             @Override
-            public void onFailure(Call<QuestionCount> call, Throwable t) {
+            public void onFailure(Call<CategoryQuestionCount> call, Throwable t) {
             }
         });
     }

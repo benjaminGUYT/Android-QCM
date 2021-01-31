@@ -1,8 +1,8 @@
-package com.example.qcm.ui.gallery;
+package com.example.qcm.models;
 
 import java.util.List;
 
-public class Result {
+public class ListCategories {
 
     private List<Category> trivia_categories;
 

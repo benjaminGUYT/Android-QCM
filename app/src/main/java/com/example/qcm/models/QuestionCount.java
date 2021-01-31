@@ -1,6 +1,6 @@
-package com.example.qcm.ui.gallery;
+package com.example.qcm.models;
 
-public class Counts {
+public class QuestionCount {
 
     private int total_question_count;
 

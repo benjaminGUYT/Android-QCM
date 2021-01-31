@@ -1,4 +1,4 @@
-package com.example.qcm.ui.gallery;
+package com.example.qcm.models;
 
 public class Category {
 
