@@ -1,4 +1,4 @@
-package com.example.qcm.ui.gallery;
+package com.example.qcm.repositories;
 
 import com.example.qcm.models.CategoryQuestionCount;
 import com.example.qcm.models.ListCategories;
