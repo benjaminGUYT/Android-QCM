@@ -8,6 +8,8 @@ public class Question {
 
     private String correct_answer;
 
+    private String type;
+
     private List<String> incorrect_answers;
 
     @Override
