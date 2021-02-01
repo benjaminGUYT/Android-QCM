@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.example.qcm.R;
 import com.example.qcm.models.ListQuestions;
 import com.example.qcm.models.Question;
 import com.example.qcm.ui.widgets.MultipleQuestionWidget;
+import com.example.qcm.ui.widgets.TrueFalseQuestionWidget;
 
 import java.util.List;
 
@@ -55,12 +57,51 @@ public class QcmFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_qcm, container, false);
 
         MultipleQuestionWidget mqw = root.findViewById(R.id.question);
+        TrueFalseQuestionWidget tfqw = root.findViewById(R.id.trueFalse);
+
+        Button next = root.findViewById(R.id.buttonNext);
 
         Question question = listQuestions.getResults().get(0);
-        if(question.getType().equals("multiple"))
+        if(question.getType().equals("multiple")) {
+            mqw.setVisibility(View.VISIBLE);
+            tfqw.setVisibility(View.INVISIBLE);
             mqw.setQuestion(question);
-        else
-            root.setVisibility(MultipleQuestionWidget.GONE);
+        }
+        else {
+            tfqw.setVisibility(View.VISIBLE);
+            mqw.setVisibility(View.INVISIBLE);
+            tfqw.setQuestion(question);
+        }
+
+        next.setOnClickListener(new View.OnClickListener() {
+            int i = 1;
+            @Override
+            public void onClick(View view) {
+                if(i >= listQuestions.getResults().size() - 1) {
+                    next.setText("Terminer");
+                    next.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            next.setText("HOHOHOHO");
+                        }
+                    });
+                }
+
+                mqw.uncheckAll();
+                Question question = listQuestions.getResults().get(i);
+                if(question.getType().equals("multiple")) {
+                    mqw.setVisibility(View.VISIBLE);
+                    tfqw.setVisibility(View.INVISIBLE);
+                    mqw.setQuestion(question);
+                }
+                else {
+                    tfqw.setVisibility(View.VISIBLE);
+                    mqw.setVisibility(View.INVISIBLE);
+                    tfqw.setQuestion(question);
+                }
+                i++;
+            }
+        });
 
         return root;
     }

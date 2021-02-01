@@ -11,4 +11,20 @@
         android:layout_width="wrap_content">
 
     </com.example.qcm.ui.widgets.MultipleQuestionWidget>
+
+    <com.example.qcm.ui.widgets.TrueFalseQuestionWidget
+        android:id="@+id/trueFalse"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+
+    </com.example.qcm.ui.widgets.TrueFalseQuestionWidget>
+
+    <Button
+        android:id="@+id/buttonNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:text="@string/buttonNext" />
+
+
 </FrameLayout>
