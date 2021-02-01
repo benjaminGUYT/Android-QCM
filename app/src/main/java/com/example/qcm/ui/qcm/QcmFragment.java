@@ -77,6 +77,10 @@ public class QcmFragment extends Fragment {
             int i = 1;
             @Override
             public void onClick(View view) {
+
+                mqw.uncheckAll();
+                tfqw.uncheckAll();
+
                 if(i >= listQuestions.getResults().size() - 1) {
                     next.setText("Terminer");
                     next.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +91,7 @@ public class QcmFragment extends Fragment {
                     });
                 }
 
-                mqw.uncheckAll();
+
                 Question question = listQuestions.getResults().get(i);
                 if(question.getType().equals("multiple")) {
                     mqw.setVisibility(View.VISIBLE);
