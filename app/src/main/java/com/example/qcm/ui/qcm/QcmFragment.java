@@ -1,5 +1,6 @@
 package com.example.qcm.ui.qcm;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,11 +8,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.TextView;
 
 import com.example.qcm.R;
 import com.example.qcm.models.ListQuestions;
 import com.example.qcm.models.Question;
+import com.example.qcm.ui.widgets.MultipleQuestionWidget;
 
 import java.util.List;
 
@@ -44,17 +47,20 @@ public class QcmFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_qcm, container, false);
 
-        TextView textView = root.findViewById(R.id.TEXT_STATUS_ID);
-        StringBuilder sb = new StringBuilder("");
-        for(Question q : listQuestions.getResults())
-            sb.append(q.toString());
-        textView.setText(sb.toString() + '\n');
+        MultipleQuestionWidget mqw = root.findViewById(R.id.question);
+
+        Question question = listQuestions.getResults().get(0);
+        if(question.getType().equals("multiple"))
+            mqw.setQuestion(question);
+        else
+            root.setVisibility(MultipleQuestionWidget.GONE);
 
         return root;
     }
