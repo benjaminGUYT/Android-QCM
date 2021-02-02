@@ -16,6 +16,7 @@ import com.example.qcm.models.ListQuestions;
 import com.example.qcm.models.Question;
 import com.example.qcm.models.UserResponse;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -53,20 +54,20 @@ public class EndFragment extends Fragment {
         TextView tt = root.findViewById(R.id.textView2);
         int goodAnswers = 0;
         int numberQuestions = userResponse.size();
-
+        double percentage = 0;
 
         for(UserResponse u : userResponse) {
-
             System.out.println(u.getReponses().stream().noneMatch(u1 -> u.getQuestion().getIncorrect_answers().contains(u1)));
             if (u.getReponses().stream().noneMatch(u1 -> u.getQuestion().getIncorrect_answers().contains(u1))) {
                     goodAnswers++;
             }
-
         }
 
-        float pourcentage = (goodAnswers/numberQuestions) * 100;
-        tt.setText("Le nombre de bonnes réponses est : " + goodAnswers + " sur " + numberQuestions + " questions" + "\n" +
-                "Pourcentage : " + pourcentage +"%");
+        percentage = (double) goodAnswers/numberQuestions;
+        String percentage100 = new DecimalFormat("#.##").format(percentage*100);
+
+        percentage = goodAnswers/numberQuestions;
+        tt.setText("Le nombre de bonnes réponses est : " + goodAnswers + " sur " + numberQuestions + " questions \n" + "Pourcentage : " + percentage100 + "%");
 
         return root;
     }
