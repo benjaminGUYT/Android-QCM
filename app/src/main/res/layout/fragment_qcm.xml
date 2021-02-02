@@ -3,30 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.qcm.QcmFragment">
+    tools:context=".ui.qcm.QcmFragment"
+    >
+
+
 
     <com.example.qcm.ui.widgets.MultipleQuestionWidget
         android:id="@+id/question"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+        android:layout_width="wrap_content"
+        >
 
     </com.example.qcm.ui.widgets.MultipleQuestionWidget>
 
     <com.example.qcm.ui.widgets.TrueFalseQuestionWidget
         android:id="@+id/trueFalse"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+        android:layout_width="wrap_content"
+        >
 
     </com.example.qcm.ui.widgets.TrueFalseQuestionWidget>
+
 
     <Button
         android:id="@+id/buttonNext"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
-        android:layout_marginBottom="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="8dp"
         android:layout_gravity="bottom"
         android:text="@string/buttonNext" />
+
+
 
 
 </FrameLayout>

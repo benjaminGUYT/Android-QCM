@@ -2,3 +2,13 @@
 *.apk
 *.ap_
 *.aab
+.gradle/6.5/executionHistory/executionHistory.bin
+.gradle/6.5/executionHistory/executionHistory.bin
+.gradle/6.5/fileHashes/fileHashes.bin
+.gradle/6.5/executionHistory/executionHistory.bin
+.idea/vcs.xml
+*.properties
+.idea/gradle.xml
+*.bin
+.gradle/6.5/executionHistory/executionHistory.bin
+.gradle/6.5/javaCompile/classAnalysis.bin

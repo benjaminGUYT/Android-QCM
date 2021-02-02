@@ -74,24 +74,11 @@ public class QcmFragment extends Fragment {
 
         Button next = root.findViewById(R.id.buttonNext);
 
-        question = listQuestions.getResults().get(0);
+        question = listQuestions.getResults().remove(0);
+        if(listQuestions.getResults().size() == 0) {
 
-        if(question.getType().equals("multiple")) {
-            mqw.setVisibility(View.VISIBLE);
-            tfqw.setVisibility(View.INVISIBLE);
-            mqw.setQuestion(question);
-        }
-        else {
-            tfqw.setVisibility(View.VISIBLE);
-            mqw.setVisibility(View.INVISIBLE);
-            tfqw.setQuestion(question);
-        }
-
-        next.setOnClickListener(new View.OnClickListener() {
-            int i = 1;
-            @Override
-            public void onClick(View view) {
-
+            next.setText("Terminer");
+            next.setOnClickListener(view1 -> {
                 if(mqw.getVisibility() == View.VISIBLE) {
                     userResponses.add(mqw.getUserResponses());
                     List<CheckBox> responseCheckBox = mqw.getReponsesCheckBox();
@@ -110,63 +97,137 @@ public class QcmFragment extends Fragment {
                         else c.setTextColor(Color.RED);
                     }
                 }
-
-                Handler handler = new Handler();
-                handler.postDelayed(() -> {
-                    if(mqw.getVisibility() == View.VISIBLE)
-                        mqw.reset();
-                    if(tfqw.getVisibility() == View.VISIBLE)
-                        tfqw.reset();
-                }, 1800);
-                handler.postDelayed(() -> {
-
-                    if(i >= listQuestions.getResults().size() - 1) {
-                        next.setText("Terminer");
-                        next.setOnClickListener(view1 -> {
-                            if(mqw.getVisibility() == View.VISIBLE) {
-                                userResponses.add(mqw.getUserResponses());
-                                List<CheckBox> responseCheckBox = mqw.getReponsesCheckBox();
-                                for(CheckBox c : responseCheckBox) {
-                                    if(c.getText().toString().equals(question.getCorrect_answer()))
-                                        c.setTextColor(Color.GREEN);
-                                    else c.setTextColor(Color.RED);
-                                }
-                            }
-                            else if(tfqw.getVisibility() == View.VISIBLE) {
-                                userResponses.add(tfqw.getUserResponses());
-                                List<RadioButton> responseCheckBox = tfqw.getReponsesRadioButton();
-                                for(RadioButton c : responseCheckBox) {
-                                    if(c.getText().toString().equals(question.getCorrect_answer()))
-                                        c.setTextColor(Color.GREEN);
-                                    else c.setTextColor(Color.RED);
-                                }
-                            }
-                            FragmentTransaction t = getParentFragmentManager().beginTransaction();
-                            t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses));
-                            t.commit();
-                        });
-                    }
-
-                    Question question1 = listQuestions.getResults().get(i);
-                    if(question1.getType().equals("multiple")) {
-                        mqw.setVisibility(View.VISIBLE);
-                        tfqw.setVisibility(View.INVISIBLE);
-                        mqw.setQuestion(question1);
-                    }
-                    else {
-                        tfqw.setVisibility(View.VISIBLE);
-                        mqw.setVisibility(View.INVISIBLE);
-                        tfqw.setQuestion(question1);
-                    }
-                    question = question1;
-                            i++;
-                    }, 2000);
-
+                FragmentTransaction t = getParentFragmentManager().beginTransaction();
+                t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses));
+                t.commit();
 
 
             }
-        });
+            );
+        }
 
+        if(question.getType().equals("multiple")) {
+            mqw.setVisibility(View.VISIBLE);
+            tfqw.setVisibility(View.INVISIBLE);
+            mqw.setQuestion(question);
+        }
+        else {
+            tfqw.setVisibility(View.VISIBLE);
+            mqw.setVisibility(View.INVISIBLE);
+            tfqw.setQuestion(question);
+        }
+        if(listQuestions.getResults().size() != 0) {
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (mqw.getVisibility() == View.VISIBLE) {
+                        userResponses.add(mqw.getUserResponses());
+                        List<CheckBox> responseCheckBox = mqw.getReponsesCheckBox();
+                        for (CheckBox c : responseCheckBox) {
+                            if (c.getText().toString().equals(question.getCorrect_answer()))
+                                c.setTextColor(Color.GREEN);
+                            else c.setTextColor(Color.RED);
+                        }
+                    } else if (tfqw.getVisibility() == View.VISIBLE) {
+                        userResponses.add(tfqw.getUserResponses());
+                        List<RadioButton> responseCheckBox = tfqw.getReponsesRadioButton();
+                        for (RadioButton c : responseCheckBox) {
+                            if (c.getText().toString().equals(question.getCorrect_answer()))
+                                c.setTextColor(Color.GREEN);
+                            else c.setTextColor(Color.RED);
+                        }
+                    }
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(() -> {
+                        if (mqw.getVisibility() == View.VISIBLE)
+                            mqw.reset();
+                        if (tfqw.getVisibility() == View.VISIBLE)
+                            tfqw.reset();
+                    }, 1800);
+                    handler.postDelayed(() -> {
+                        System.out.println("----------------" + listQuestions.getResults().size());
+                        if (listQuestions.getResults().size() == 0) {
+
+                            next.setText("Terminer");
+                            next.setOnClickListener(view1 -> {
+                                if (mqw.getVisibility() == View.VISIBLE) {
+                                    userResponses.add(mqw.getUserResponses());
+                                    List<CheckBox> responseCheckBox = mqw.getReponsesCheckBox();
+                                    for (CheckBox c : responseCheckBox) {
+                                        if (c.getText().toString().equals(question.getCorrect_answer()))
+                                            c.setTextColor(Color.GREEN);
+                                        else c.setTextColor(Color.RED);
+                                    }
+                                } else if (tfqw.getVisibility() == View.VISIBLE) {
+                                    userResponses.add(tfqw.getUserResponses());
+                                    List<RadioButton> responseCheckBox = tfqw.getReponsesRadioButton();
+                                    for (RadioButton c : responseCheckBox) {
+                                        if (c.getText().toString().equals(question.getCorrect_answer()))
+                                            c.setTextColor(Color.GREEN);
+                                        else c.setTextColor(Color.RED);
+                                    }
+                                }
+                                FragmentTransaction t = getParentFragmentManager().beginTransaction();
+                                t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses));
+                                t.commit();
+
+
+                            });
+
+
+                        }
+                        if (listQuestions.getResults().size() != 0) {
+                            Question question1 = listQuestions.getResults().remove(0);
+                            if (listQuestions.getResults().size() == 0) {
+
+                                next.setText("Terminer");
+                                next.setOnClickListener(view1 -> {
+                                    if (mqw.getVisibility() == View.VISIBLE) {
+                                        userResponses.add(mqw.getUserResponses());
+                                        List<CheckBox> responseCheckBox = mqw.getReponsesCheckBox();
+                                        for (CheckBox c : responseCheckBox) {
+                                            if (c.getText().toString().equals(question.getCorrect_answer()))
+                                                c.setTextColor(Color.GREEN);
+                                            else c.setTextColor(Color.RED);
+                                        }
+                                    } else if (tfqw.getVisibility() == View.VISIBLE) {
+                                        userResponses.add(tfqw.getUserResponses());
+                                        List<RadioButton> responseCheckBox = tfqw.getReponsesRadioButton();
+                                        for (RadioButton c : responseCheckBox) {
+                                            if (c.getText().toString().equals(question.getCorrect_answer()))
+                                                c.setTextColor(Color.GREEN);
+                                            else c.setTextColor(Color.RED);
+                                        }
+                                    }
+                                    FragmentTransaction t = getParentFragmentManager().beginTransaction();
+                                    t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses));
+                                    t.commit();
+
+
+                                });
+
+
+                            }
+                            if (question1.getType().equals("multiple")) {
+                                mqw.setVisibility(View.VISIBLE);
+                                tfqw.setVisibility(View.INVISIBLE);
+                                mqw.setQuestion(question1);
+                            } else {
+                                tfqw.setVisibility(View.VISIBLE);
+                                mqw.setVisibility(View.INVISIBLE);
+                                tfqw.setQuestion(question1);
+                            }
+                            question = question1;
+                        }
+                    }, 2000);
+
+
+                }
+            });
+        }
         return root;
     }
 
