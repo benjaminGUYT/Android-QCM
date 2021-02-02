@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:columnCount="2"
-    android:rowCount="3">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/question_text"
         android:layout_width="match_parent"
         android:layout_columnSpan="2"
-        android:layout_margin="8dp"/>
+        android:layout_margin="8dp"
+        android:layout_height="wrap_content" />
 
     <CheckBox android:id="@+id/response_cb_1"
-        android:layout_columnWeight="1"
-        android:layout_rowWeight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="fill"
         android:layout_margin="8dp"
         />
 
     <CheckBox android:id="@+id/response_cb_2"
-        android:layout_columnWeight="1"
-        android:layout_rowWeight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="fill"
         android:layout_margin="8dp"/>
 
     <CheckBox android:id="@+id/response_cb_3"
-        android:layout_columnWeight="1"
-        android:layout_rowWeight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="fill"
         android:layout_margin="8dp"/>
 
     <CheckBox android:id="@+id/response_cb_4"
-        android:layout_columnWeight="1"
-        android:layout_rowWeight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="fill"
         android:layout_margin="8dp"/>
 
 
-</GridLayout>
+</LinearLayout>
