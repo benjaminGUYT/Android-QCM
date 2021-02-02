@@ -1,5 +1,6 @@
 package com.example.qcm.ui.end;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -41,6 +42,7 @@ public class EndFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,13 +56,6 @@ public class EndFragment extends Fragment {
 
 
         for(UserResponse u : userResponse) {
-            for(String q : u.getQuestion().getIncorrect_answers()) {
-                System.out.println("INCORRECT ANSWERS " + q);
-            }
-            System.out.println("CORRECT ANSWERS " + u.getQuestion().getCorrect_answer());
-            for(String r : u.getReponses()) {
-                System.out.println("LES REPONSES DU POTO " + r);
-            }
 
             System.out.println(u.getReponses().stream().noneMatch(u1 -> u.getQuestion().getIncorrect_answers().contains(u1)));
             if (u.getReponses().stream().noneMatch(u1 -> u.getQuestion().getIncorrect_answers().contains(u1))) {
@@ -68,7 +63,11 @@ public class EndFragment extends Fragment {
             }
 
         }
-        tt.setText("Le nombre de bonnes réponses est : " + goodAnswers + " sur " + numberQuestions + " questions.");
+
+        float pourcentage = (goodAnswers/numberQuestions) * 100;
+        tt.setText("Le nombre de bonnes réponses est : " + goodAnswers + " sur " + numberQuestions + " questions" + "\n" +
+                "Pourcentage : " + pourcentage +"%");
+
         return root;
     }
 
