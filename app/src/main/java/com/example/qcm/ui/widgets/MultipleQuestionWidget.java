@@ -1,21 +1,27 @@
 package com.example.qcm.ui.widgets;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.GridLayout;
+import android.widget.Filter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.qcm.R;
 import com.example.qcm.models.Question;
+import com.example.qcm.models.UserResponse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class MultipleQuestionWidget extends GridLayout {
+public class MultipleQuestionWidget extends LinearLayout {
 
     private Question question;
 
@@ -27,13 +33,9 @@ public class MultipleQuestionWidget extends GridLayout {
 
     public MultipleQuestionWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.question = question;
 
         final Context tmpContext = context;
 
-        this.question = question;
-
-        // Inflate the custom widget layout xml file.
         LayoutInflater root = LayoutInflater.from(context);
         root.inflate(R.layout.multiple_question_widget, this);
 
@@ -43,14 +45,11 @@ public class MultipleQuestionWidget extends GridLayout {
         reponse3 = (CheckBox) findViewById(R.id.response_cb_3);
         reponse4 = (CheckBox) findViewById(R.id.response_cb_4);
 
-
     }
 
     public void setQuestion(Question question) {
+        this.question = question;
         questionText.setText(question.getQuestion());
-
-        System.out.println("----------------------------------------------");
-        System.out.println(question.toString());
 
         List<String> reponses = new ArrayList<>(4);
         for(String s : question.getIncorrect_answers())
@@ -64,13 +63,27 @@ public class MultipleQuestionWidget extends GridLayout {
         reponse4.setText(reponses.get(3));
     }
 
-    public void uncheckAll() {
-        reponse1.setChecked(false);
-        reponse2.setChecked(false);
-        reponse3.setChecked(false);
-        reponse4.setChecked(false);
-
+    public void reset() {
+        for(CheckBox c : getReponsesCheckBox()) {
+            c.setChecked(false);
+            c.setTextColor(Color.BLACK);
+        }
     }
 
+    public UserResponse getUserResponses() {
+        List<String> ret = new ArrayList<>();
+        for(CheckBox c : getReponsesCheckBox())
+            if(c.isChecked()) ret.add(c.getText().toString());
+        UserResponse userResponse = new UserResponse(question, ret);
+        return userResponse;
+    }
+
+    /* Pas le plus opti, peut-etre  créer un attributt List<CheckBox>
+    réinitialisé à chaque changement de question */
+    public List<CheckBox> getReponsesCheckBox() {
+        List<CheckBox> ret = new ArrayList<>();
+        ret.addAll(Arrays.asList(new CheckBox[]{reponse1, reponse2, reponse3, reponse4}));
+        return ret;
+    }
 
 }
