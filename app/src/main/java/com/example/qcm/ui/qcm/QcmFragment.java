@@ -181,7 +181,36 @@ public class QcmFragment extends Fragment {
                         }
                         if (listQuestions.getResults().size() != 0) {
                             Question question1 = listQuestions.getResults().remove(0);
+                            if (listQuestions.getResults().size() == 0) {
 
+                                next.setText("Terminer");
+                                next.setOnClickListener(view1 -> {
+                                    if (mqw.getVisibility() == View.VISIBLE) {
+                                        userResponses.add(mqw.getUserResponses());
+                                        List<CheckBox> responseCheckBox = mqw.getReponsesCheckBox();
+                                        for (CheckBox c : responseCheckBox) {
+                                            if (c.getText().toString().equals(question.getCorrect_answer()))
+                                                c.setTextColor(Color.GREEN);
+                                            else c.setTextColor(Color.RED);
+                                        }
+                                    } else if (tfqw.getVisibility() == View.VISIBLE) {
+                                        userResponses.add(tfqw.getUserResponses());
+                                        List<RadioButton> responseCheckBox = tfqw.getReponsesRadioButton();
+                                        for (RadioButton c : responseCheckBox) {
+                                            if (c.getText().toString().equals(question.getCorrect_answer()))
+                                                c.setTextColor(Color.GREEN);
+                                            else c.setTextColor(Color.RED);
+                                        }
+                                    }
+                                    FragmentTransaction t = getParentFragmentManager().beginTransaction();
+                                    t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses));
+                                    t.commit();
+
+
+                                });
+
+
+                            }
                             if (question1.getType().equals("multiple")) {
                                 mqw.setVisibility(View.VISIBLE);
                                 tfqw.setVisibility(View.INVISIBLE);
