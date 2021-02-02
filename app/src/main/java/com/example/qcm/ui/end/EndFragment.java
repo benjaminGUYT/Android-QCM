@@ -56,9 +56,13 @@ public class EndFragment extends Fragment {
         int numberQuestions = userResponse.size();
         double percentage = 0;
 
+
         for(UserResponse u : userResponse) {
+            for(String s : u.getReponses()) {
+                System.out.println("LES REPONSE DU POTO : " + s );
+            }
             System.out.println(u.getReponses().stream().noneMatch(u1 -> u.getQuestion().getIncorrect_answers().contains(u1)));
-            if (u.getReponses().stream().noneMatch(u1 -> u.getQuestion().getIncorrect_answers().contains(u1)) && (!u.getReponses().stream().noneMatch(u1 -> u1.equals(""))) && (!u.getReponses().stream().noneMatch(u1 -> u1.isEmpty()))) {
+            if (u.getReponses().stream().noneMatch(u1 -> u.getQuestion().getIncorrect_answers().contains(u1))) {
                     goodAnswers++;
             }
         }

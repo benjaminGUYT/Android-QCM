@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.example.qcm.R;
 import com.example.qcm.models.ListQuestions;
@@ -121,6 +122,14 @@ public class QcmFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
+                    System.out.println(mqw.isAllCheckBoxUnchecked());
+                    System.out.println(tfqw.isAllRadioButtonUnchecked());
+
+                    if(mqw.isAllCheckBoxUnchecked() && tfqw.isAllRadioButtonUnchecked()) {
+                        Toast toast = Toast.makeText(getContext(), "Veuillez chocher au moins une réponse", Toast.LENGTH_LONG);
+                        toast.show();
+                        return;
+                    }
 
                     if (mqw.getVisibility() == View.VISIBLE) {
                         userResponses.add(mqw.getUserResponses());

@@ -75,4 +75,14 @@ public class TrueFalseQuestionWidget extends GridLayout {
         ret.addAll(Arrays.asList(new RadioButton[]{reponse1, reponse2}));
         return ret;
     }
+
+    public boolean isAllRadioButtonUnchecked() {
+        int i = 0;
+        for(RadioButton rb : getReponsesRadioButton()) {
+            if(!rb.isChecked()) {
+                i++;
+            }
+        }
+        return i == 2;
+    }
 }

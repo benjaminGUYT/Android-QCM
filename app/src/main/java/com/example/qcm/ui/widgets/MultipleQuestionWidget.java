@@ -86,4 +86,13 @@ public class MultipleQuestionWidget extends LinearLayout {
         return ret;
     }
 
+    public boolean isAllCheckBoxUnchecked() {
+        int i = 0;
+        for(CheckBox c : getReponsesCheckBox()) {
+            if(!c.isChecked()) {
+                i++;
+            }
+        }
+        return i == 4;
+    }
 }
