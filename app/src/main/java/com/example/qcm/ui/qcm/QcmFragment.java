@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
 import android.view.GestureDetector;
@@ -21,6 +22,7 @@ import com.example.qcm.R;
 import com.example.qcm.models.ListQuestions;
 import com.example.qcm.models.Question;
 import com.example.qcm.models.UserResponse;
+import com.example.qcm.ui.end.EndFragment;
 import com.example.qcm.ui.widgets.MultipleQuestionWidget;
 import com.example.qcm.ui.widgets.TrueFalseQuestionWidget;
 
@@ -120,7 +122,9 @@ public class QcmFragment extends Fragment {
                     if(i >= listQuestions.getResults().size() - 1) {
                         next.setText("Terminer");
                         next.setOnClickListener(view1 -> {
-                            next.setText("HOHOHOHO");
+                            FragmentTransaction t = getParentFragmentManager().beginTransaction();
+                            t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses));
+                            t.commit();
                         });
                     }
 

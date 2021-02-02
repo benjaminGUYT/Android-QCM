@@ -12,4 +12,12 @@ public class UserResponse {
         this.question = question;
     }
 
+    public Question getQuestion() {
+        return this.question;
+    }
+
+    public List<String> getReponses() {
+        return this.reponses;
+    }
+
 }
