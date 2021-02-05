@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -51,6 +52,12 @@ public class EndFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_end, container, false);
 
+        ProgressBar progrssBar = root.findViewById(R.id.circular_determinative_pb);
+
+        progrssBar.setIndeterminate(false);
+        progrssBar.setMax(100);
+
+
         TextView tt = root.findViewById(R.id.textView2);
         int goodAnswers = 0;
         int numberQuestions = userResponse.size();
@@ -73,6 +80,8 @@ public class EndFragment extends Fragment {
         percentage = goodAnswers/numberQuestions;
         tt.setText("Le nombre de bonnes réponses est : " + goodAnswers + " sur " + numberQuestions + " questions \n" + "Pourcentage : " + percentage100 + "%");
 
+        progrssBar.setProgress((int) percentage);
+        progrssBar.setVisibility(View.VISIBLE);
         return root;
     }
 
