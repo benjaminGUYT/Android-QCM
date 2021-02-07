@@ -1,22 +1,17 @@
 package com.example.qcm.ui.qcm;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.os.Handler;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Filter;
 import android.widget.RadioButton;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.qcm.R;
 import com.example.qcm.models.ListQuestions;
@@ -37,25 +32,25 @@ import java.util.List;
 public class QcmFragment extends Fragment {
 
     private List<UserResponse> userResponses;
+    private ListQuestions listQuestions;
+    private Question question;
+
+    private Button next;
+    private MultipleQuestionWidget mqw;
+    private TrueFalseQuestionWidget tfqw;
 
     public QcmFragment() {
         // Required empty public constructor
     }
 
-    public void setListQuestions(ListQuestions listQuestions) {
-        this.listQuestions = listQuestions;
-    }
-
-    private ListQuestions listQuestions;
-    private Question question;
-    private Button next;
-    private MultipleQuestionWidget mqw;
-    private TrueFalseQuestionWidget tfqw;
-
     public static QcmFragment newInstance(ListQuestions listQuestions) {
         QcmFragment fragment = new QcmFragment();
         fragment.setListQuestions(listQuestions);
         return fragment;
+    }
+
+    public void setListQuestions(ListQuestions listQuestions) {
+        this.listQuestions = listQuestions;
     }
 
     @Override
@@ -75,7 +70,6 @@ public class QcmFragment extends Fragment {
         next = root.findViewById(R.id.buttonNext);
 
         setNextQuestion();
-
         return root;
     }
 
@@ -88,7 +82,7 @@ public class QcmFragment extends Fragment {
 
     private void setNextButton() {
         next.setOnClickListener(view -> {
-            showSolution();
+            showSolutionSaveUserResp();
             Handler handler = new Handler();
             handler.postDelayed(() -> {
                 if (mqw.getVisibility() == View.VISIBLE)
@@ -103,14 +97,14 @@ public class QcmFragment extends Fragment {
     private void setNextButtonFinalState() {
         next.setText("Terminer");
         next.setOnClickListener(view1 -> {
-            showSolution();
+            showSolutionSaveUserResp();
             FragmentTransaction t = getParentFragmentManager().beginTransaction();
             t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses));
             t.commit();
         });
     }
 
-    private void showSolution() {
+    private void showSolutionSaveUserResp() {
         if (mqw.getVisibility() == View.VISIBLE) {
             userResponses.add(mqw.getUserResponses());
             List<CheckBox> responseCheckBox = mqw.getReponsesCheckBox();
