@@ -32,8 +32,6 @@ public class OptionsViewModel extends ViewModel {
     private Retrofit retrofit;
     OpenTriviaDB openTriviaDB;
 
-
-
     public OptionsViewModel() {
         numberOfQuestions = new MutableLiveData<>(50);
 
