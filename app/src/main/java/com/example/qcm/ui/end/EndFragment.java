@@ -1,17 +1,23 @@
 package com.example.qcm.ui.end;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.daasuu.cat.CountAnimationTextView;
 import com.example.qcm.R;
 import com.example.qcm.models.ListQuestions;
 import com.example.qcm.models.Question;
@@ -52,13 +58,9 @@ public class EndFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_end, container, false);
 
-        ProgressBar progrssBar = root.findViewById(R.id.circular_determinative_pb);
-
-        progrssBar.setIndeterminate(false);
-        progrssBar.setMax(100);
 
 
-        TextView tt = root.findViewById(R.id.textView2);
+
         int goodAnswers = 0;
         int numberQuestions = userResponse.size();
         double percentage = 0;
@@ -78,10 +80,21 @@ public class EndFragment extends Fragment {
         String percentage100 = new DecimalFormat("#.##").format(percentage*100);
 
         percentage = goodAnswers/numberQuestions;
-        tt.setText("Le nombre de bonnes réponses est : " + goodAnswers + " sur " + numberQuestions + " questions \n" + "Pourcentage : " + percentage100 + "%");
 
-        progrssBar.setProgress((int) percentage);
-        progrssBar.setVisibility(View.VISIBLE);
+        ProgressBar progrssBar = root.findViewById(R.id.progressBar);
+        int goal = Integer.parseInt(percentage100.split(",")[0]);
+        //progrssBar.setProgress(goal, true);
+
+        ObjectAnimator progressAnimator;
+        progressAnimator = ObjectAnimator.ofInt(progrssBar, "progress", goal);
+        progressAnimator.setDuration(1000);
+        progressAnimator.start();
+
+        CountAnimationTextView percent = root.findViewById(R.id.percents);
+        percent
+                .setAnimationDuration(1000)
+                .countAnimation(0, goal);
+
         return root;
     }
 
