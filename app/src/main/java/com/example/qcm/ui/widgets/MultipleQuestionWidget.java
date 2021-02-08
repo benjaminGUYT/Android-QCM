@@ -71,10 +71,20 @@ public class MultipleQuestionWidget extends LinearLayout {
     }
 
     public UserResponse getUserResponses() {
+        int i = 0;
         List<String> ret = new ArrayList<>();
         for(CheckBox c : getReponsesCheckBox())
-            if(c.isChecked()) ret.add(c.getText().toString());
-        UserResponse userResponse = new UserResponse(question, ret);
+            if(c.isChecked()) {
+                ret.add(c.getText().toString());
+                i++;
+            }
+        UserResponse userResponse = null;
+        if(i > 0) {
+             userResponse = new UserResponse(question, ret, true);
+        }
+        else {
+             userResponse = new UserResponse(question, ret, false);
+        }
         return userResponse;
     }
 

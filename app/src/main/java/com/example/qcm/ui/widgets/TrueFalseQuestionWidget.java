@@ -62,9 +62,20 @@ public class TrueFalseQuestionWidget extends GridLayout {
 
     public UserResponse getUserResponses() {
         List<String> ret = new ArrayList<>();
-        for(RadioButton c : getReponsesRadioButton())
-            if(c.isChecked()) ret.add(c.getText().toString());
-        UserResponse userResponse = new UserResponse(question, ret);
+        int i = 0;
+        for(RadioButton c : getReponsesRadioButton()) {
+            if (c.isChecked()) {
+                ret.add(c.getText().toString());
+                i++;
+            }
+        }
+        UserResponse userResponse = null;
+        if(i > 0) {
+            userResponse = new UserResponse(question, ret, true);
+        }
+        else {
+            userResponse = new UserResponse(question, ret, false);
+        }
         return userResponse;
     }
 
