@@ -3,6 +3,7 @@ package com.example.qcm.ui.qcm;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -43,6 +45,8 @@ public class QcmFragment extends Fragment {
     private MultipleQuestionWidget mqw;
     private TrueFalseQuestionWidget tfqw;
     private TextView chrono;
+    private int secondsToRun;
+    private CountDownTimer countDownTimer;
 
     public QcmFragment() {
         // Required empty public constructor
@@ -75,23 +79,26 @@ public class QcmFragment extends Fragment {
         next = root.findViewById(R.id.buttonNext);
         chrono = root.findViewById(R.id.chrono);
 
-        int secondsToRun = 999;
+        secondsToRun = 10000;
+        countDownTimer = new CountDownTimer(secondsToRun, 1000) {
 
-        ValueAnimator timer = ValueAnimator.ofInt(secondsToRun);
-        timer.setDuration(secondsToRun * 1000).setInterpolator(new LinearInterpolator());
-        timer.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
             @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                int elapsedSeconds = (int) animation.getAnimatedValue();
-                int minutes = elapsedSeconds / 60;
-                int seconds = elapsedSeconds % 60;
+            public void onTick(long l) {
+                int sec = (int) (l / 1000)%60;
+                int min = sec / 60;
 
-                chrono.setText(String.format("%d:%02d", minutes, seconds));
+                chrono.setText(String.format("%d:%02d", min, sec));
             }
-        });
-        timer.start();
+
+            @Override
+            public void onFinish() {
+                Toast toast = Toast.makeText(getContext(), "Le temps imparti est écoulé, affichage du score", Toast.LENGTH_LONG);
+                toast.show();
+                FragmentTransaction t = getParentFragmentManager().beginTransaction();
+                t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses, secondsToRun/1000/60 - Integer.parseInt(chrono.getText().toString().split(":")[0]), secondsToRun/1000 - Integer.parseInt(chrono.getText().toString().split(":")[1])));
+                t.commit();
+            }
+        }.start();
 
         setNextQuestion();
         return root;
@@ -122,8 +129,9 @@ public class QcmFragment extends Fragment {
         next.setText("Terminer");
         next.setOnClickListener(view1 -> {
             showSolutionSaveUserResp();
+            countDownTimer.cancel();
             FragmentTransaction t = getParentFragmentManager().beginTransaction();
-            t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses));
+            t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses, secondsToRun/1000/60 - Integer.parseInt(chrono.getText().toString().split(":")[0]), secondsToRun/1000 - Integer.parseInt(chrono.getText().toString().split(":")[1])));
             t.commit();
         });
     }

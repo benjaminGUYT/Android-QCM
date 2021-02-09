@@ -31,18 +31,25 @@ import java.util.stream.Stream;
 public class EndFragment extends Fragment {
 
     private List<UserResponse> userResponse;
+    private int minutes;
+    private int secondes;
 
     public EndFragment() {
     }
 
-    public static EndFragment newInstance(List<UserResponse> userResponse) {
+    public static EndFragment newInstance(List<UserResponse> userResponse, int minutes, int secondes) {
         EndFragment endFragment = new EndFragment();
         endFragment.setUserResponse(userResponse);
+        endFragment.setChrono(minutes, secondes);
         return endFragment;
     }
 
     public void setUserResponse(List<UserResponse> userResponse) {
         this.userResponse = userResponse;
+    }
+    public void setChrono(int minutes, int secondes) {
+        this.minutes = minutes;
+        this.secondes = secondes;
     }
 
     @Override
@@ -70,6 +77,7 @@ public class EndFragment extends Fragment {
         for(UserResponse u : userResponse) {
             for(String s : u.getReponses()) {
                 System.out.println("LES REPONSE DU POTO : " + s );
+                System.out.println("LE CHRONO MNUTES : " + minutes + " SECONDEDES " + secondes);
             }
             System.out.println(u.getReponses().stream().noneMatch(u1 -> u.getQuestion().getIncorrect_answers().contains(u1)));
             if(u.getIsAnswered()) {
@@ -82,13 +90,16 @@ public class EndFragment extends Fragment {
             }
         }
 
-        percentage = (double) goodAnswers/numberQuestions;
-        String percentage100 = new DecimalFormat("#.##").format(percentage*100);
-
-        percentage = goodAnswers/numberQuestions;
+        percentage=0;
+        String percentage100="0,0";
+        if(numberQuestions > 0) {
+            percentage = (double) goodAnswers / numberQuestions;
+            percentage100 = new DecimalFormat("#.##").format(percentage * 100);
+            percentage = goodAnswers / numberQuestions;
+        }
 
         ProgressBar progrssBar = root.findViewById(R.id.progressBar);
-        int goal = Integer.parseInt(percentage100.split(".")[0]);
+        int goal = Integer.parseInt(percentage100.split(",")[0]);
         //progrssBar.setProgress(goal, true);
 
         ObjectAnimator progressAnimator;
