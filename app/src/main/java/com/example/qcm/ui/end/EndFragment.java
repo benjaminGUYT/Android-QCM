@@ -88,7 +88,7 @@ public class EndFragment extends Fragment {
         percentage = goodAnswers/numberQuestions;
 
         ProgressBar progrssBar = root.findViewById(R.id.progressBar);
-        int goal = Integer.parseInt(percentage100.split(",")[0]);
+        int goal = Integer.parseInt(percentage100.split(".")[0]);
         //progrssBar.setProgress(goal, true);
 
         ObjectAnimator progressAnimator;
