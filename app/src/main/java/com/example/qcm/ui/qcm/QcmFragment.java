@@ -17,12 +17,14 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.qcm.R;
 import com.example.qcm.models.ListQuestions;
 import com.example.qcm.models.Question;
 import com.example.qcm.models.UserResponse;
 import com.example.qcm.ui.end.EndFragment;
+import com.example.qcm.ui.options.OptionsViewModel;
 import com.example.qcm.ui.widgets.MultipleQuestionWidget;
 import com.example.qcm.ui.widgets.TrueFalseQuestionWidget;
 
@@ -47,6 +49,8 @@ public class QcmFragment extends Fragment {
     private TextView chrono;
     private int secondsToRun;
     private CountDownTimer countDownTimer;
+    private QcmViewModel qcmViewModel;
+    private final int INTERVAL_COUNT_DOWN = 1000;
 
     public QcmFragment() {
         // Required empty public constructor
@@ -72,6 +76,7 @@ public class QcmFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_qcm, container, false);
+        qcmViewModel = new ViewModelProvider(this).get(QcmViewModel.class);
 
         userResponses = new ArrayList<>();
         mqw = root.findViewById(R.id.question);
@@ -79,8 +84,11 @@ public class QcmFragment extends Fragment {
         next = root.findViewById(R.id.buttonNext);
         chrono = root.findViewById(R.id.chrono);
 
+        // To pass
         secondsToRun = 10000;
-        countDownTimer = new CountDownTimer(secondsToRun, 1000) {
+
+
+        countDownTimer = new CountDownTimer(secondsToRun, INTERVAL_COUNT_DOWN) {
 
             @Override
             public void onTick(long l) {
@@ -100,11 +108,11 @@ public class QcmFragment extends Fragment {
             }
         }.start();
 
-        setNextQuestion();
+        this.qcmViewModel.setNextQuestion(question, listQuestions, next, mqw, tfqw, userResponses, countDownTimer, secondsToRun, chrono, getParentFragmentManager().beginTransaction());
         return root;
     }
 
-    private void setNextQuestion() {
+  /**  private void setNextQuestion() {
         question = listQuestions.getResults().remove(0);
         if(listQuestions.getResults().isEmpty()) setNextButtonFinalState();
         else setNextButton();
@@ -167,6 +175,6 @@ public class QcmFragment extends Fragment {
             mqw.setVisibility(View.INVISIBLE);
             tfqw.setQuestion(question);
         }
-    }
+    }*/
 
 }

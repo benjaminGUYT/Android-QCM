@@ -47,7 +47,7 @@ public class OptionsFragment extends Fragment {
     private List<String> difficulties = new ArrayList<String>(Arrays.asList(new String[]{"Any", "Easy", "Medium", "Hard"}));
     private List<Category> categoryList = new ArrayList<Category>();
     private Button sendingButton;
-    RangeSlider rangeSlider;
+    private RangeSlider rangeSlider;
 
     private Category selectedCategory;
     private String selectedDifficulty = "any";
