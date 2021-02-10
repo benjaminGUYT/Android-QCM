@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModel;
 
+import com.example.qcm.QuestionTypeEnum;
 import com.example.qcm.R;
 import com.example.qcm.models.ListQuestions;
 import com.example.qcm.models.Question;
@@ -78,7 +79,7 @@ public class QcmViewModel extends ViewModel {
     }
 
     public void setWidgetsVisibility(Question question, MultipleQuestionWidget mqw, TrueFalseQuestionWidget tfqw) {
-        if(question.getType().equals("multiple")) {
+        if(question.getType().equals(QuestionTypeEnum.MULTIPLE.name().toLowerCase())) {
             mqw.setVisibility(View.VISIBLE);
             tfqw.setVisibility(View.INVISIBLE);
             mqw.setQuestion(question);

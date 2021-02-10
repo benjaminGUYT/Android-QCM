@@ -29,6 +29,7 @@ import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.RangeSlider;
 
 
+import java.lang.reflect.Array;
 import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;

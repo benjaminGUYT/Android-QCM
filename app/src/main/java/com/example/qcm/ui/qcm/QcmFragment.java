@@ -29,6 +29,7 @@ import com.example.qcm.ui.widgets.MultipleQuestionWidget;
 import com.example.qcm.ui.widgets.TrueFalseQuestionWidget;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 
@@ -42,15 +43,19 @@ public class QcmFragment extends Fragment {
     private List<UserResponse> userResponses;
     private ListQuestions listQuestions;
     private Question question;
+    private List<Float> listValues;
 
     private Button next;
     private MultipleQuestionWidget mqw;
     private TrueFalseQuestionWidget tfqw;
     private TextView chrono;
-    private int secondsToRun;
+
     private CountDownTimer countDownTimer;
-    private QcmViewModel qcmViewModel;
+    private int secondsToRun;
     private final int INTERVAL_COUNT_DOWN = 1000;
+
+    private QcmViewModel qcmViewModel;
+
 
     public QcmFragment() {
         // Required empty public constructor
@@ -59,11 +64,15 @@ public class QcmFragment extends Fragment {
     public static QcmFragment newInstance(ListQuestions listQuestions) {
         QcmFragment fragment = new QcmFragment();
         fragment.setListQuestions(listQuestions);
+       // fragment.setListValues(listValues);
         return fragment;
     }
 
     public void setListQuestions(ListQuestions listQuestions) {
         this.listQuestions = listQuestions;
+    }
+    public void setListValues(List<Float> listValues) {
+        this.listValues = listValues;
     }
 
     @Override
@@ -85,7 +94,7 @@ public class QcmFragment extends Fragment {
         chrono = root.findViewById(R.id.chrono);
 
         // To pass
-        secondsToRun = 10000;
+        secondsToRun = 100000;
 
 
         countDownTimer = new CountDownTimer(secondsToRun, INTERVAL_COUNT_DOWN) {

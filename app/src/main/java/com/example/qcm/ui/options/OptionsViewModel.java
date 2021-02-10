@@ -28,12 +28,13 @@ public class OptionsViewModel extends ViewModel {
     private MutableLiveData<Category> initialSelectedCategory;
     private MutableLiveData<Integer> numberOfQuestions;
     private MutableLiveData<ListQuestions> listQuestions;
+    private final int MAX_NUMBER_QUESTION_FROM_API = 50;
 
     private Retrofit retrofit;
     OpenTriviaDB openTriviaDB;
 
     public OptionsViewModel() {
-        numberOfQuestions = new MutableLiveData<>(50);
+        numberOfQuestions = new MutableLiveData<>(MAX_NUMBER_QUESTION_FROM_API);
 
         categoryHint = new MutableLiveData<>();
         categoryHint.setValue("Category :");

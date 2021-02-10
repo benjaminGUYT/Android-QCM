@@ -87,13 +87,4 @@ public class TrueFalseQuestionWidget extends GridLayout {
         return ret;
     }
 
-    public boolean isAllRadioButtonUnchecked() {
-        int i = 0;
-        for(RadioButton rb : getReponsesRadioButton()) {
-            if(!rb.isChecked()) {
-                i++;
-            }
-        }
-        return i == 2;
-    }
 }
