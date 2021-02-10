@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,7 +25,13 @@ import com.example.qcm.models.Category;
 import com.example.qcm.models.ListQuestions;
 import com.example.qcm.models.Question;
 import com.example.qcm.ui.qcm.QcmFragment;
+import com.google.android.material.slider.LabelFormatter;
+import com.google.android.material.slider.RangeSlider;
 
+
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +47,7 @@ public class OptionsFragment extends Fragment {
     private List<String> difficulties = new ArrayList<String>(Arrays.asList(new String[]{"Any", "Easy", "Medium", "Hard"}));
     private List<Category> categoryList = new ArrayList<Category>();
     private Button sendingButton;
+    RangeSlider rangeSlider;
 
     private Category selectedCategory;
     private String selectedDifficulty = "any";
@@ -58,6 +66,7 @@ public class OptionsFragment extends Fragment {
         categoryHint = root.findViewById(R.id.category_hint);
         difficultyHint = root.findViewById(R.id.difficulty_hint);
         amountHint = root.findViewById(R.id.amount_hint);
+        rangeSlider = root.findViewById(R.id.timer_opt);
 
 
         final Spinner categoriesSpinner = root.findViewById(R.id.categories_spinner);
@@ -104,6 +113,13 @@ public class OptionsFragment extends Fragment {
         questionCount.setValue(50);
         questionCount.setOnValueChangedListener((numberPicker, i, i1) -> {
             selectedNumber = numberPicker.getValue();
+        });
+
+
+        rangeSlider.setLabelFormatter(value -> {
+            NumberFormat format = NumberFormat.getInstance();
+            format.setMaximumFractionDigits(0);
+            return format.format(new Double(value)) + "s";
         });
 
         sendingButton = root.findViewById(R.id.sending_button);
