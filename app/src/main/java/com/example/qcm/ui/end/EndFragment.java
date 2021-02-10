@@ -16,12 +16,14 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.daasuu.cat.CountAnimationTextView;
 import com.example.qcm.R;
 import com.example.qcm.models.ListQuestions;
 import com.example.qcm.models.Question;
 import com.example.qcm.models.UserResponse;
+import com.example.qcm.ui.qcm.QcmViewModel;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -33,6 +35,7 @@ public class EndFragment extends Fragment {
     private List<UserResponse> userResponse;
     private int minutes;
     private int secondes;
+    private EndViewModel endViewModel;
 
     public EndFragment() {
     }
@@ -64,46 +67,17 @@ public class EndFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_end, container, false);
+        endViewModel = new ViewModelProvider(this).get(EndViewModel.class);
 
 
 
-
-        int goodAnswers = 0;
-        int noAnswered = 0;
-        int numberQuestions = userResponse.size();
-        double percentage = 0;
-
-
-        for(UserResponse u : userResponse) {
-            for(String s : u.getReponses()) {
-                System.out.println("LES REPONSE DU POTO : " + s );
-                System.out.println("LE CHRONO MNUTES : " + minutes + " SECONDEDES " + secondes);
-            }
-            System.out.println(u.getReponses().stream().noneMatch(u1 -> u.getQuestion().getIncorrect_answers().contains(u1)));
-            if(u.getIsAnswered()) {
-                if (u.getReponses().stream().noneMatch(u1 -> u.getQuestion().getIncorrect_answers().contains(u1))) {
-                    goodAnswers++;
-                }
-            }
-            else {
-                noAnswered++;
-            }
-        }
-
-        percentage=0;
-        String percentage100="0,0";
-        if(numberQuestions > 0) {
-            percentage = (double) goodAnswers / numberQuestions;
-            percentage100 = new DecimalFormat("#.##").format(percentage * 100);
-            percentage = goodAnswers / numberQuestions;
-        }
-
-        ProgressBar progrssBar = root.findViewById(R.id.progressBar);
-        int goal = Integer.parseInt(percentage100.split(",")[0]);
+        String percentage = this.endViewModel.checkGoodAnswers(userResponse);
+        ProgressBar progressBar = root.findViewById(R.id.progressBar);
+        int goal = Integer.parseInt(percentage.split(",")[0]);
         //progrssBar.setProgress(goal, true);
 
         ObjectAnimator progressAnimator;
-        progressAnimator = ObjectAnimator.ofInt(progrssBar, "progress", goal);
+        progressAnimator = ObjectAnimator.ofInt(progressBar, "progress", goal);
         progressAnimator.setDuration(1000);
         progressAnimator.start();
 
@@ -111,6 +85,7 @@ public class EndFragment extends Fragment {
         percent
                 .setAnimationDuration(1000)
                 .countAnimation(0, goal);
+
 
         return root;
     }
