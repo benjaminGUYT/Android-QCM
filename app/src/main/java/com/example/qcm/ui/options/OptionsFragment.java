@@ -1,6 +1,7 @@
 package com.example.qcm.ui.options;
 
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,16 +27,18 @@ import com.example.qcm.models.ListQuestions;
 import com.example.qcm.models.Question;
 import com.example.qcm.ui.qcm.QcmFragment;
 import com.google.android.material.slider.LabelFormatter;
-import com.google.android.material.slider.RangeSlider;
+import com.google.android.material.slider.Slider;
 
 
 import java.lang.reflect.Array;
 import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class OptionsFragment extends Fragment {
 
@@ -48,7 +51,7 @@ public class OptionsFragment extends Fragment {
     private List<String> difficulties = new ArrayList<String>(Arrays.asList(new String[]{"Any", "Easy", "Medium", "Hard"}));
     private List<Category> categoryList = new ArrayList<Category>();
     private Button sendingButton;
-    private RangeSlider rangeSlider;
+    private Slider slider;
 
     private Category selectedCategory;
     private String selectedDifficulty = "any";
@@ -62,12 +65,10 @@ public class OptionsFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_options, container, false);
 
-
-
         categoryHint = root.findViewById(R.id.category_hint);
         difficultyHint = root.findViewById(R.id.difficulty_hint);
         amountHint = root.findViewById(R.id.amount_hint);
-        rangeSlider = root.findViewById(R.id.timer_opt);
+        slider = root.findViewById(R.id.timer_opt);
 
 
         final Spinner categoriesSpinner = root.findViewById(R.id.categories_spinner);
@@ -111,16 +112,22 @@ public class OptionsFragment extends Fragment {
         questionCount = root.findViewById(R.id.question_count);
         questionCount.setMinValue(1);
         questionCount.setMaxValue(50);
-        questionCount.setValue(50);
         questionCount.setOnValueChangedListener((numberPicker, i, i1) -> {
             selectedNumber = numberPicker.getValue();
+            slider.setValueFrom(selectedNumber * 5);
+            slider.setValueTo(selectedNumber * 10);
+            slider.setValue(selectedNumber * 5);
         });
+        questionCount.setValue(50);
+        slider.setValueFrom(50 * 5);
+        slider.setValueTo(50 * 10);
+        slider.setValue(50 * 5);
 
-
-        rangeSlider.setLabelFormatter(value -> {
+        slider.setLabelFormatter(value -> {
             NumberFormat format = NumberFormat.getInstance();
             format.setMaximumFractionDigits(0);
-            return format.format(new Double(value)) + "s";
+            if(value < 60)  return format.format(new Double(value)) + "s";
+            return TimeUnit.SECONDS.toMinutes((int) value) + "min" + TimeUnit.SECONDS.toSeconds((int) value % 60) + "s";
         });
 
         sendingButton = root.findViewById(R.id.sending_button);
@@ -181,7 +188,7 @@ public class OptionsFragment extends Fragment {
             for(Question q : listQuestions.getResults())
                 System.out.println(q.toString() + '\n');
             FragmentTransaction t = this.getParentFragmentManager().beginTransaction();
-            t.replace(R.id.nav_host_fragment, QcmFragment.newInstance(selectedListQuestions));
+            t.replace(R.id.nav_host_fragment, QcmFragment.newInstance(selectedListQuestions, slider.getValue()));
             t.commit();
         });
 
