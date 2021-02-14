@@ -109,7 +109,7 @@ public class QcmFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                Toast toast = Toast.makeText(getContext(), "Le temps imparti est écoulé, affichage du score", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getContext(), "Le temps imparti est écoulé, affichage du score ..", Toast.LENGTH_LONG);
                 toast.show();
                 FragmentTransaction t = getParentFragmentManager().beginTransaction();
                 t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses, secondsToRun%60 - Integer.parseInt(chrono.getText().toString().split(":")[0]), secondsToRun/1000 - Integer.parseInt(chrono.getText().toString().split(":")[1])));
