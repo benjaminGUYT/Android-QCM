@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,9 +62,11 @@ public class QcmFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static QcmFragment newInstance(ListQuestions listQuestions) {
+    public static QcmFragment newInstance(ListQuestions listQuestions, Float timer) {
         QcmFragment fragment = new QcmFragment();
         fragment.setListQuestions(listQuestions);
+        fragment.secondsToRun = timer.intValue() * 1000;
+        System.out.println(timer.intValue());
        // fragment.setListValues(listValues);
         return fragment;
     }
@@ -93,16 +96,13 @@ public class QcmFragment extends Fragment {
         next = root.findViewById(R.id.buttonNext);
         chrono = root.findViewById(R.id.chrono);
 
-        // To pass
-        secondsToRun = 100000;
-
 
         countDownTimer = new CountDownTimer(secondsToRun, INTERVAL_COUNT_DOWN) {
 
             @Override
             public void onTick(long l) {
                 int sec = (int) (l / 1000)%60;
-                int min = sec / 60;
+                int min = (int) TimeUnit.SECONDS.toMinutes((int) l / 1000);
 
                 chrono.setText(String.format("%d:%02d", min, sec));
             }
@@ -112,7 +112,7 @@ public class QcmFragment extends Fragment {
                 Toast toast = Toast.makeText(getContext(), "Le temps imparti est écoulé, affichage du score", Toast.LENGTH_LONG);
                 toast.show();
                 FragmentTransaction t = getParentFragmentManager().beginTransaction();
-                t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses, secondsToRun/1000/60 - Integer.parseInt(chrono.getText().toString().split(":")[0]), secondsToRun/1000 - Integer.parseInt(chrono.getText().toString().split(":")[1])));
+                t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses, secondsToRun%60 - Integer.parseInt(chrono.getText().toString().split(":")[0]), secondsToRun/1000 - Integer.parseInt(chrono.getText().toString().split(":")[1])));
                 t.commit();
             }
         }.start();
@@ -121,69 +121,6 @@ public class QcmFragment extends Fragment {
         return root;
     }
 
-  /**  private void setNextQuestion() {
-        question = listQuestions.getResults().remove(0);
-        if(listQuestions.getResults().isEmpty()) setNextButtonFinalState();
-        else setNextButton();
-        setWidgetsVisibility();
-    }
 
-    private void setNextButton() {
-        next.setOnClickListener(view -> {
-            showSolutionSaveUserResp();
-            Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                if (mqw.getVisibility() == View.VISIBLE)
-                    mqw.reset();
-                if (tfqw.getVisibility() == View.VISIBLE)
-                    tfqw.reset();
-                handler.postDelayed(() -> setNextQuestion(), 200);
-            }, 1800);
-        });
-    }
-
-    private void setNextButtonFinalState() {
-        next.setText("Terminer");
-        next.setOnClickListener(view1 -> {
-            showSolutionSaveUserResp();
-            countDownTimer.cancel();
-            FragmentTransaction t = getParentFragmentManager().beginTransaction();
-            t.replace(R.id.nav_host_fragment, EndFragment.newInstance(userResponses, secondsToRun/1000/60 - Integer.parseInt(chrono.getText().toString().split(":")[0]), secondsToRun/1000 - Integer.parseInt(chrono.getText().toString().split(":")[1])));
-            t.commit();
-        });
-    }
-
-    private void showSolutionSaveUserResp() {
-        if (mqw.getVisibility() == View.VISIBLE) {
-            userResponses.add(mqw.getUserResponses());
-            List<CheckBox> responseCheckBox = mqw.getReponsesCheckBox();
-            for (CheckBox c : responseCheckBox) {
-                if (c.getText().toString().equals(question.getCorrect_answer()))
-                    c.setTextColor(Color.GREEN);
-                else c.setTextColor(Color.RED);
-            }
-        } else if (tfqw.getVisibility() == View.VISIBLE) {
-            userResponses.add(tfqw.getUserResponses());
-            List<RadioButton> responseCheckBox = tfqw.getReponsesRadioButton();
-            for (RadioButton c : responseCheckBox) {
-                if (c.getText().toString().equals(question.getCorrect_answer()))
-                    c.setTextColor(Color.GREEN);
-                else c.setTextColor(Color.RED);
-            }
-        }
-    }
-
-    private void setWidgetsVisibility() {
-        if(question.getType().equals("multiple")) {
-            mqw.setVisibility(View.VISIBLE);
-            tfqw.setVisibility(View.INVISIBLE);
-            mqw.setQuestion(question);
-        }
-        else {
-            tfqw.setVisibility(View.VISIBLE);
-            mqw.setVisibility(View.INVISIBLE);
-            tfqw.setQuestion(question);
-        }
-    }*/
 
 }
