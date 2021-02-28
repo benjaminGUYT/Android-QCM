@@ -1,5 +1,7 @@
 package com.example.qcm.ui.options;
 
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.view.LayoutInflater;
@@ -60,6 +62,8 @@ public class OptionsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 
         galleryViewModel = new ViewModelProvider(this).get(OptionsViewModel.class);
 

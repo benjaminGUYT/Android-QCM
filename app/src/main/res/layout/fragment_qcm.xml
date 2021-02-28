@@ -6,7 +6,8 @@
     tools:context=".ui.qcm.QcmFragment"
     >
 
-
+    <ScrollView android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
     <com.example.qcm.ui.widgets.MultipleQuestionWidget
         android:id="@+id/question"
@@ -15,14 +16,17 @@
         >
 
     </com.example.qcm.ui.widgets.MultipleQuestionWidget>
-
+    </ScrollView>
+    <ScrollView android:layout_height="match_parent"
+    android:layout_width="match_parent">
     <com.example.qcm.ui.widgets.TrueFalseQuestionWidget
         android:id="@+id/trueFalse"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         >
+        </com.example.qcm.ui.widgets.TrueFalseQuestionWidget>
+    </ScrollView>
 
-    </com.example.qcm.ui.widgets.TrueFalseQuestionWidget>
 
 
     <Button

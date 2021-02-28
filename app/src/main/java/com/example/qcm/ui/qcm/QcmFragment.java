@@ -1,6 +1,7 @@
 package com.example.qcm.ui.qcm;
 
 import android.animation.ValueAnimator;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -86,6 +87,8 @@ public class QcmFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 
         View root = inflater.inflate(R.layout.fragment_qcm, container, false);
         qcmViewModel = new ViewModelProvider(this).get(QcmViewModel.class);

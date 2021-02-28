@@ -2,6 +2,7 @@ package com.example.qcm.ui.end;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -65,6 +66,9 @@ public class EndFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_end, container, false);
         endViewModel = new ViewModelProvider(this).get(EndViewModel.class);
