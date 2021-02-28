@@ -28,6 +28,7 @@ import com.example.qcm.ui.end.EndFragment;
 import com.example.qcm.ui.options.OptionsViewModel;
 import com.example.qcm.ui.widgets.MultipleQuestionWidget;
 import com.example.qcm.ui.widgets.TrueFalseQuestionWidget;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +47,7 @@ public class QcmFragment extends Fragment {
     private ListQuestions listQuestions;
     private Question question;
     private List<Float> listValues;
+    private   String countFormat;
 
     private Button next;
     private MultipleQuestionWidget mqw;
@@ -68,7 +70,7 @@ public class QcmFragment extends Fragment {
         fragment.setListQuestions(listQuestions);
         fragment.secondsToRun = timer.intValue() * 1000;
         System.out.println(timer.intValue());
-       // fragment.setListValues(listValues);
+        // fragment.setListValues(listValues);
         return fragment;
     }
 
@@ -87,29 +89,41 @@ public class QcmFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        super.onCreateView(inflater, container, savedInstanceState);
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 
-        View root = inflater.inflate(R.layout.fragment_qcm, container, false);
-        qcmViewModel = new ViewModelProvider(this).get(QcmViewModel.class);
 
-        userResponses = new ArrayList<>();
+        View root = inflater.inflate(R.layout.fragment_qcm, container, false);
+
+
         mqw = root.findViewById(R.id.question);
         tfqw = root.findViewById(R.id.trueFalse);
         next = root.findViewById(R.id.buttonNext);
         chrono = root.findViewById(R.id.chrono);
 
+        if(savedInstanceState != null) {
+            countFormat = savedInstanceState.getString("countFormat");
+            chrono.setText(countFormat);
+            Gson gson = new Gson();
+            userResponses = (List<UserResponse>) gson.fromJson(savedInstanceState.getString("listUserResponse"), List.class);
+            listQuestions = gson.fromJson(savedInstanceState.getString("listQuestions"), ListQuestions.class);
+            question = gson.fromJson(savedInstanceState.getString("question"), Question.class);
+            secondsToRun =savedInstanceState.getInt("second");
+            qcmViewModel = (QcmViewModel) savedInstanceState.getParcelable("kok");
+        }
+        else {
+            qcmViewModel = new ViewModelProvider(this).get(QcmViewModel.class);
+        }
 
         countDownTimer = new CountDownTimer(secondsToRun, INTERVAL_COUNT_DOWN) {
-
             @Override
             public void onTick(long l) {
+                secondsToRun = (int) l;
                 int sec = (int) (l / 1000)%60;
                 int min = (int) TimeUnit.SECONDS.toMinutes((int) l / 1000);
-
-                chrono.setText(String.format("%d:%02d", min, sec));
+                countFormat = String.format("%d:%02d", min, sec);
+                chrono.setText(countFormat);
             }
-
             @Override
             public void onFinish() {
                 Toast toast = Toast.makeText(getContext(), "Le temps imparti est écoulé, affichage du score ..", Toast.LENGTH_LONG);
@@ -125,5 +139,19 @@ public class QcmFragment extends Fragment {
     }
 
 
+
+        @Override
+        public void onSaveInstanceState(Bundle bundle) {
+            super.onSaveInstanceState(bundle);
+            bundle.putString("countFormat", countFormat);
+            Gson gson = new Gson();
+            String jsonUserResp = gson.toJson(userResponses);
+            bundle.putSerializable("listUserResponse", jsonUserResp);
+            String jsonListQuestion = gson.toJson(listQuestions);
+            bundle.putSerializable("listQuestions", jsonListQuestion);
+            String jsonQuestion = gson.toJson(question);
+            bundle.putSerializable("question", jsonQuestion);
+            bundle.putInt("second", secondsToRun);
+        }
 
 }
