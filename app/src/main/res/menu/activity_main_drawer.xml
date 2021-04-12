@@ -12,5 +12,9 @@
             android:id="@+id/nav_options"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/menu_options_qcm" />
+        <item
+            android:id="@+id/nav_iot"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="IoT" />
     </group>
 </menu>

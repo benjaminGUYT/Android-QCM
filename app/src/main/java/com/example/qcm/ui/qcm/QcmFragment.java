@@ -100,7 +100,8 @@ public class QcmFragment extends Fragment {
         tfqw = root.findViewById(R.id.trueFalse);
         next = root.findViewById(R.id.buttonNext);
         chrono = root.findViewById(R.id.chrono);
-
+        qcmViewModel = new ViewModelProvider(this).get(QcmViewModel.class);
+/**
         if(savedInstanceState != null) {
             countFormat = savedInstanceState.getString("countFormat");
             chrono.setText(countFormat);
@@ -108,12 +109,9 @@ public class QcmFragment extends Fragment {
             userResponses = (List<UserResponse>) gson.fromJson(savedInstanceState.getString("listUserResponse"), List.class);
             listQuestions = gson.fromJson(savedInstanceState.getString("listQuestions"), ListQuestions.class);
             question = gson.fromJson(savedInstanceState.getString("question"), Question.class);
-            secondsToRun =savedInstanceState.getInt("second");
-            qcmViewModel = (QcmViewModel) savedInstanceState.getParcelable("kok");
+            secondsToRun = savedInstanceState.getInt("second");
         }
-        else {
-            qcmViewModel = new ViewModelProvider(this).get(QcmViewModel.class);
-        }
+*/
 
         countDownTimer = new CountDownTimer(secondsToRun, INTERVAL_COUNT_DOWN) {
             @Override
