@@ -152,4 +152,8 @@ public class QcmFragment extends Fragment {
             bundle.putInt("second", secondsToRun);
         }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

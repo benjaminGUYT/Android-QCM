@@ -94,4 +94,8 @@ public class EndFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

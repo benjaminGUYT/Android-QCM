@@ -18,6 +18,12 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.QCM.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.QCM.NoActionBar">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

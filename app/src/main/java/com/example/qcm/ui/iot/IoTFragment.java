@@ -70,7 +70,7 @@ public class IoTFragment  extends Fragment implements  ZBarScannerView.ResultHan
     public void handleResult(Result rawResult) {
 
         String qrcode = rawResult.getContents();
-        Log.d(TAG, "QRcode " + qrcode);
+        Log.d(TAG, "QRcode " +  qrcode);
 
         remoteSign(token, qrcode);
         mScannerView.resumeCameraPreview(this);
@@ -97,15 +97,25 @@ public class IoTFragment  extends Fragment implements  ZBarScannerView.ResultHan
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     public void remoteSign(String token, String qrcode) {
 
         String urlString =
-                "http://192.168.0.11/iot-server/api/qrcode-sign.php?key=iot1235&token=" + token + "&qrcode=" + qrcode; // URL à changer sinon ça  plante
+                "http://192.168.10.111/iot/api/qrcode-sign.php?key=iot1235&token=" + token + "&qrcode=" + qrcode; // URL à changer sinon ça  plante
         Ion.with(this)
                 .load(urlString)
                 .asString().withResponse()
                 .setCallback((e, response) -> {
-                    if (response.getHeaders().code() == 200) {  }
+                    if (response.getHeaders().code() == 200) {
+                        System.out.println("LOG YOUPIIIIIIII");
+                    }
+                    else {
+                        System.out.println("QR CODE NON VALIDE");
+                    }
                 });
     }
 }
